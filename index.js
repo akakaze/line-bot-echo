@@ -1,12 +1,28 @@
+var http = require('http'),
+    url = require("url"),
+    fixieUrl = url.parse(process.env.FIXIE_URL),
+    requestUrl = url.parse("http://www.example.com");
+http.get({
+    host: fixieUrl.hostname,
+    port: fixieUrl.port,
+    path: requestUrl.href,
+    headers: {
+      Host: requestUrl.host,
+      "Proxy-Authorization": "Basic " + new Buffer(fixieUrl.auth).toString('base64'),
+    }
+}, function (res) {
+  console.log("Got response: " + res.statusCode);
+});
+
 var _ = require('lodash');
 var bodyParser = require('body-parser');
 var express = require('express');
 var request = require('superagent');
 var LineBot = require('line-bot-sdk');
 var client = LineBot.client({
-  channelID: 'YOUR_CHANNEL_ID',
-  channelSecret: 'YOUR_CHANNEL_SECRET',
-  channelMID: 'YOUR_CHANNEL_MID'
+  channelID: process.env.ChannelID,
+  channelSecret: process.env.ChannelSecret,
+  channelMID: process.env.MID
 });
 
 var app = express();
