@@ -19,6 +19,7 @@ http.get({
 var _ = require('lodash');
 var bodyParser = require('body-parser');
 var express = require('express');
+var proxy = require('express-http-proxy');
 var request = require('superagent');
 var LineBot = require('line-bot-sdk');
 var client = LineBot.client({
@@ -30,8 +31,8 @@ var client = LineBot.client({
 var app = express();
 
 app.set('port', (process.env.PORT || 5000));
-app.set('proxy', process.env.FIXIE_URL);
 
+app.use('/proxy', proxy(process.env.FIXIE_URL));
 app.use(bodyParser.urlencoded({ extended: false, limit: 2 * 1024 * 1024 }));
 app.use(bodyParser.json({ limit: 2 * 1024 * 1024 }));
 
