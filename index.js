@@ -52,7 +52,7 @@ app.post('/', function (req, res) {
                             }
                         }
                     }, function onError(err){
-                        console.error(err);
+                        console.error(err.response.res.text);
                     });
                 } else {
                     client.sendText(receive.getFromMid(), receive.getText());
