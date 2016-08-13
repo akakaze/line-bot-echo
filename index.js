@@ -44,7 +44,8 @@ app.post('/', function (req, res) {
         if(receive.isMessage()){
             if(receive.isText()){
                 if(receive.getText()==='me'){
-                    client.getUserProfile(receive.getFromMid())
+                    client
+                    .getUserProfile(receive.getFromMid())
                     .then(function onResult(res){
                         if(res.status === 200){
                             var contacts = res.body.contacts;
