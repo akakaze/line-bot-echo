@@ -34,9 +34,6 @@ app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.json());
 
 app.post('/', function (req, res) {
-	console.log(req);
-	console.log(res);
-	/*
 	var receives = client.createReceivesFromJSON(req.body);
 	_.each(receives, function(receive){
 		var mid = receive.getFromMid();
@@ -79,7 +76,6 @@ app.post('/', function (req, res) {
 			console.error('invalid receive type');
 		}
 	});
-	*/
 	res.send('ok');
 });
 
