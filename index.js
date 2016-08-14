@@ -18,7 +18,7 @@ http.get({
 
 var _ = require('lodash');
 var bodyParser = require('body-parser');
-var proxy = require('express-http-proxy');
+var proxy = require('express-http-proxy')(process.env.FIXIE_URL);
 var LineBot = require('line-bot-sdk');
 var client = LineBot.client({
 	channelID: process.env.ChannelID,
@@ -26,11 +26,13 @@ var client = LineBot.client({
 	channelMID: process.env.MID
 });
 
+console.log(proxy);
+
 var app = require('express')();
 
 app.set('port', (process.env.PORT || 5000));
 
-app.use('/', proxy(process.env.FIXIE_URL));
+app.use('/', proxy);
 app.use(bodyParser.json());
 
 app.post('/', function (req, res) {
