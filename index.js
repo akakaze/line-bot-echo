@@ -35,7 +35,7 @@ app.set('port', (process.env.PORT || 5000));
 app.use('/', proxy(process.env.FIXIE_URL));
 app.use(bodyParser.urlencoded({ extended: false, limit: 2 * 1024 * 1024 }));
 app.use(bodyParser.json({ limit: 2 * 1024 * 1024 }));
-app.get('http://welcome.usefixie.com/', function (req, res) {
+app.get('/', function (req, res) {
     console.log(req);
     console.log("OK");
 });
