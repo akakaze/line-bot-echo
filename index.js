@@ -1,21 +1,3 @@
-/*
-var http = require('http'),
-    url = require("url"),
-    fixieUrl = url.parse(process.env.FIXIE_URL),
-    requestUrl = url.parse("http://www.example.com");
-http.get({
-    host: fixieUrl.hostname,
-    port: fixieUrl.port,
-    path: requestUrl.href,
-    headers: {
-        Host: requestUrl.host,
-        "Proxy-Authorization": "Basic " + new Buffer(fixieUrl.auth).toString('base64'),
-    }
-}, function (res) {
-    console.log("Got response: " + res.statusCode);
-});
-*/
-
 var _ = require('lodash');
 var bodyParser = require('body-parser');
 var proxy = require('express-http-proxy')(process.env.FIXIE_URL, {
@@ -35,7 +17,7 @@ var app = require('express')();
 
 app.set('port', (process.env.PORT || 5000));
 
-//app.use('/', proxy);
+app.use('/', proxy);
 app.use(bodyParser.json());
 
 app.post('/', function (req, res) {
