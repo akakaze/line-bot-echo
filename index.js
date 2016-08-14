@@ -36,7 +36,7 @@ app.use('/', proxy(process.env.FIXIE_URL));
 app.use(bodyParser.urlencoded({ extended: false, limit: 2 * 1024 * 1024 }));
 app.use(bodyParser.json({ limit: 2 * 1024 * 1024 }));
 
-app.post('/callback', function (req, res) {
+app.post('/', function (req, res) {
     //console.log(req.body.result);
 
     var receives = client.createReceivesFromJSON(req.body);
