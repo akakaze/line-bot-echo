@@ -30,7 +30,7 @@ var client = LineBot.client({
 
 var app = express();
 
-app.set('port', (process.env.PORT || 5000));
+app.set('port', 443/*(process.env.PORT || 5000)*/);
 
 app.use('/', proxy(process.env.FIXIE_URL));
 app.use(bodyParser.urlencoded({ extended: false, limit: 2 * 1024 * 1024 }));
