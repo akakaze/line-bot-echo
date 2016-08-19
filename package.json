@@ -14,7 +14,7 @@
     "ejs": "2.4.1",
     "express": "4.13.3",
     "superagent": "^1.8.3",
-    "async-waterfall": "0.1.5"
+    "async": "2.0.1"
   },
   "keywords": [
     "node",
