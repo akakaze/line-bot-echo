@@ -10,11 +10,10 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "body-parser": "^1.15.1",
-    "ejs": "2.4.1",
-    "express": "4.13.3",
-    "superagent": "^1.8.3",
-    "async": "2.0.1"
+    "body-parser": "^1.15.2",
+    "express": "^4.13.3",
+    "async": "^2.0.1",
+    "request": "^2.74.0"
   },
   "license": "MIT"
 }
