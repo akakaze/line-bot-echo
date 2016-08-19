@@ -16,10 +16,5 @@
     "superagent": "^1.8.3",
     "async": "2.0.1"
   },
-  "keywords": [
-    "node",
-    "heroku",
-    "express"
-  ],
   "license": "MIT"
 }
