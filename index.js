@@ -1,71 +1,54 @@
-var _ = require('lodash');
-var bodyParser = require('body-parser');
-var proxy = require('express-http-proxy')(process.env.FIXIE_URL, {
-	forwardPath: function(req, res) {
-		console.log(req.url);
-		return require('url').parse(req.url).path;
-	}
-});
-var LineBot = require('line-bot-sdk');
-var client = LineBot.client({
-	channelID: process.env.ChannelID,
-	channelSecret: process.env.ChannelSecret,
-	channelMID: process.env.MID
-});
+var app = require("express")();
+var bodyParser = require("body-parser");
+var request = require("request");
+var async = require("async");
 
-var app = require('express')();
-
-app.set('port', (process.env.PORT || 5000));
-
-app.use('/', proxy);
+app.set("port", (process.env.PORT || 5000));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.post('/', function (req, res) {
-	var receives = client.createReceivesFromJSON(req.body);
-	_.each(receives, function(receive){
-		var mid = receive.getFromMid();
-		if(receive.isMessage()){
-			if(receive.isText()){
-				if(receive.getText() === 'me'){
-					client.getUserProfile(mid)
-					.then(function(res){
-						if(res.status === 200){
-							var contacts = res.body.contacts;
-							if(contacts.length > 0){
-								client.sendText(mid, 'Hi!, you\'re ' + contacts[0].displayName);
-							}
-						}
-					}, function(err){
-						console.error(err.response.res.text);
-					});
-				} else {
-					client.sendText(mid, receive.getText());
-				}
-			}else if(receive.isImage()){
-				client.sendText(mid, 'Thanks for the image!');
-			}else if(receive.isVideo()){
-				client.sendText(mid, 'Thanks for the video!');
-			}else if(receive.isAudio()){
-				client.sendText(mid, 'Thanks for the audio!');
-			}else if(receive.isLocation()){
-				client.sendLocation(mid, receive.getText() + receive.getAddress(), receive.getLatitude(), receive.getLongitude());
-			}else if(receive.isSticker()){
-				// This only works if the BOT account have the same sticker too
-				client.sendSticker(mid, receive.getStkId(), receive.getStkPkgId(), receive.getStkVer());
-			}else if(receive.isContact()){
-				client.sendText(mid, 'Thanks for the contact');
-			}else{
-				console.error('found unknown message type');
+app.post("/", function(req){
+	async.waterfall([function(callback) {
+		var json = req.body;
+		var from = json["result"][0]["content"]["from"];
+		var text = json["result"][0]["content"]["text"];
+		var result = "OK" + text;
+
+		callback(from, result);
+	}], function(from, result) {		// LINE BOT
+		var headers = {
+			"Content-Type" : "application/json; charset=UTF-8",
+			"X-Line-ChannelID" : process.env.ChannelID,
+			"X-Line-ChannelSecret" : process.env.ChannelSecret,
+			"X-Line-Trusted-User-With-ACL" : process.env.MID
+		};
+		var data = {
+			"to": [from],
+			"toChannel": 1383378250,
+			"eventType":"138311608800106203",
+			"content": {
+				"contentType":1,
+				"toType":1,
+				"text": result
 			}
-		}else if(receive.isOperation()){
-			console.log('found operation');
-		}else {
-			console.error('invalid receive type');
-		}
+		};
+		var options = {
+			url: "https://trialbot-api.line.me/v1/events",
+			proxy : process.env.FIXIE_URL,
+			headers: headers,
+			json: true,
+			body: data
+		};
+		request.post(options, function (err, res, body) {
+			if (!err && res.statusCode == 200) {
+				console.log(body);
+			} else {
+				console.log("error: "+ JSON.stringify(res));
+			}
+		});
 	});
-	res.send('ok');
 });
 
-app.listen(app.get('port'), function () {
-	console.log('Listening on port ' + app.get('port'));
+app.listen(app.get("port"), function() {
+	console.log("Node app is running");
 });
