@@ -22,11 +22,11 @@ app.post("/", function(req, res){
 			"X-Line-ChannelSecret" : process.env.ChannelSecret,
 			"X-Line-Trusted-User-With-ACL" : process.env.MID
 		};
-		console.log([from]);
+		console.log([from].isArray());
 		var data = {
 			"to": [from],
 			"toChannel": 1383378250,
-			"eventType":"140177271400161403",
+			"eventType":"138311608800106203",
 			"content": {
 				"contentType":1,
 				"toType":1,
