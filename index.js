@@ -14,18 +14,17 @@ app.post("/", function(req, res){
 		var text = json["result"][0]["content"]["text"];
 		var result = "OK" + text;
 
-		callback(from, result);
-	}], function(from, result) {		// LINE BOT
+		callback(null, from, result);
+	}], function(err, from, result) {		// LINE BOT
+		if(err) return;
 		var headers = {
 			"Content-Type" : "application/json; charset=UTF-8",
 			"X-Line-ChannelID" : process.env.ChannelID,
 			"X-Line-ChannelSecret" : process.env.ChannelSecret,
 			"X-Line-Trusted-User-With-ACL" : process.env.MID
 		};
-		var to = [];
-		to.push(from);
 		var data = {
-			"to": to,
+			"to": [from],
 			"toChannel": 1383378250,
 			"eventType":"138311608800106203",
 			"content": {
