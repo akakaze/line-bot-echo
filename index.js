@@ -7,16 +7,17 @@ app.set("port", (process.env.PORT || 5000));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.post("/callback", function(req, res){
+app.post("/callback", function(req, res) {
 	async.waterfall([function(callback) {
-		var json = req["body"]["result"][0]["content"];
-		var type = json.contentType;
-		if(type === 1){
-			var text = json.text;
-			var result = "OK" + text;
+	    if(req.body.result) {
+            var content = req["body"]["result"][0]["content"];
+            if (content.contentType === 1) {
+                var text = content.text;
+                var result = "OK" + text;
 
-			callback(null, json.from, result);
-		}
+                callback(null, content.from, result);
+            }
+        }
 	}], function(err, from, result) {		// LINE BOT
 		if(err) return;
 		var headers = {
@@ -42,7 +43,7 @@ app.post("/callback", function(req, res){
 			json: true,
 			body: data
 		};
-		request.post(options, function (err, res, body) {
+		request.post(options, function(err, res, body) {
 			if (!err && res.statusCode == 200) {
 				console.log(JSON.stringify(body));
 			} else {
