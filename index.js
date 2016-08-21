@@ -35,7 +35,7 @@ app.post("/callback", function(req, res){
 		};
 		var options = {
 			url: "https://trialbot-api.line.me/v1/events",
-			// proxy : process.env.FIXIE_URL,
+			proxy : process.env.FIXIE_URL,
 			headers: headers,
 			json: true,
 			body: data
