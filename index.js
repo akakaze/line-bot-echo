@@ -9,12 +9,14 @@ app.use(bodyParser.json());
 
 app.post("/callback", function(req, res){
 	async.waterfall([function(callback) {
-		var json = req.body;
-		var from = json["result"][0]["content"]["from"];
-		var text = json["result"][0]["content"]["text"];
-		var result = "OK" + text;
+		var json = req["body"]["result"][0]["content"];
+		var type = json.contentType;
+		if(type === 1){
+			var text = json.text;
+			var result = "OK" + text;
 
-		callback(null, from, result);
+			callback(null, json.from, result);
+		}
 	}], function(err, from, result) {		// LINE BOT
 		if(err) return;
 		var headers = {
@@ -35,14 +37,14 @@ app.post("/callback", function(req, res){
 		};
 		var options = {
 			url: "https://trialbot-api.line.me/v1/events",
-			// proxy : process.env.FIXIE_URL,
+			proxy : process.env.FIXIE_URL,
 			headers: headers,
 			json: true,
 			body: data
 		};
 		request.post(options, function (err, res, body) {
 			if (!err && res.statusCode == 200) {
-				console.log(body);
+				console.log(JSON.stringify(body));
 			} else {
 				console.log("error: "+ JSON.stringify(res));
 			}
