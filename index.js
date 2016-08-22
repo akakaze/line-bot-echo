@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.post("/callback", function(req, res) {
 	async.waterfall([function(callback) {
 	    if(req.body.result) {
+	        console.log(JSON.stringify(req.body.result));
             var content = req["body"]["result"][0]["content"];
             if (content.contentType === 1) {
                 var text = content.text;
